@@ -1,0 +1,6 @@
+# Signal Bot dependencies
+python-telegram-bot>=20.0
+python-dotenv>=1.0.0
+openai>=1.0.0
+ccxt>=4.0.0
+
