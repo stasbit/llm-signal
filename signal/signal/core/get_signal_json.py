@@ -25,7 +25,7 @@ def get_ema20_m15(symbol: str):
             e = _ema(closes, 20)
             if e:
                 return float(e)
-    except Exception:
+        except Exception:
             pass
     return None
 
@@ -167,7 +167,7 @@ def get_pair_ticker(sym: str):
             last, change = _fetch_ticker(ex, sym)
             if last is not None:
                 return {"last": last, "change": change}
-    except Exception:
+        except Exception:
             pass
     return {"last": None, "change": None}
 
@@ -361,15 +361,15 @@ if args.symbol:
             _prec = 4 if _val < 1 else (3 if _val < 10 else 2)
             payload["hints"]["price"] = round(_val, _prec)
             payload["hints"]["price_source"] = "live"
-    except Exception:
+        except Exception:
             pass
 
 # time hint
 payload["hints"]["time_msk"] = current_msk()
 
-    # EMA20(M15) для выбранного символа (если есть)
-    _sym = payload['hints'].get('symbol')
-    payload['hints']['ema20_m15'] = get_ema20_m15(_sym) if _sym else None
+# EMA20(M15) для выбранного символа (если есть)
+_sym = payload["hints"].get("symbol")
+payload["hints"]["ema20_m15"] = get_ema20_m15(_sym) if _sym else None
 
 
 # базовый user_prompt
@@ -429,21 +429,14 @@ try:
     _data = json.loads(content)
     # lift ema20_m15 из hints (или досчитать при необходимости)
     try:
-    if 'ema20_m15' not in data or not data['ema20_m15']:
-            _sym = payload.get('hints', {}).get('symbol') or data.get('symbol')
-    data['ema20_m15'] = payload.get('hints', {}).get('ema20_m15') or (
-    get_ema20_m15(_sym) if _sym else None)
+        if "ema20_m15" not in _data or not _data["ema20_m15"]:
+            _sym = payload.get("hints", {}).get("symbol") or _data.get("symbol")
+            _data["ema20_m15"] = payload.get("hints", {}).get("ema20_m15") or (
+                get_ema20_m15(_sym) if _sym else None
+            )
     except Exception:
         pass
-    try:
-    if 'ema20_m15' not in data or not data['ema20_m15']:
-            _sym = payload.get('hints', {}).get('symbol') or data.get('symbol')
-    data['ema20_m15'] = payload.get('hints', {}).get('ema20_m15') or (
-    get_ema20_m15(_sym) if _sym else None)
-    except Exception:
-        pass
-
-    except Exception:
+except Exception:
     print(content)
     sys.exit(0)
 
